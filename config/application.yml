@@ -1,0 +1,24 @@
+# -*- coding: utf-8 -*-
+defaults: &defaults
+  mmr:
+        acros:
+            name: "acros"
+            size: 128
+        prism:
+            name: "prism"
+            size: 200
+        media:
+            name: "media"
+            size: 180
+        other:
+            name: "other"
+            size: 100
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

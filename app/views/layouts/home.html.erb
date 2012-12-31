@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "RsCalc" %></title>
+    <%= csrf_meta_tags %>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+    <![endif]-->
+
+    <%= stylesheet_link_tag "application", :media => "all" %>
+
+    <!-- For third-generation iPad with high-resolution Retina display: -->
+    <!-- Size should be 144 x 144 pixels -->
+    <%= favicon_link_tag 'images/apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144' %>
+
+    <!-- For iPhone with high-resolution Retina display: -->
+    <!-- Size should be 114 x 114 pixels -->
+    <%= favicon_link_tag 'images/apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114' %>
+
+    <!-- For first- and second-generation iPad: -->
+    <!-- Size should be 72 x 72 pixels -->
+    <%= favicon_link_tag 'images/apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72' %>
+
+    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+    <!-- Size should be 57 x 57 pixels -->
+    <%= favicon_link_tag 'images/apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png' %>
+
+    <!-- For all other devices -->
+    <!-- Size should be 32 x 32 pixels -->
+    <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <%= link_to "RsCalc", root_path, :class => "brand" %>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+            <ul class="nav pull-right">
+              <% if user_signed_in? %>
+              <%= link_to "Logout", destroy_user_session_path, :method => :delete, :class => "btn btn-danger" %>
+              <% else %>
+              <%= link_to "Login", new_user_session_path, :class => "btn btn-primary" %>
+              <% end %>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <h1>Rainbow Activity Ratio</h1>
+        <br>
+        <p>
+          ここでは立命館大学びわこ・くさつキャンパスにある三つのマルチメディアルーム(MMR)の利用状況を掲載しています．
+        </p>
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span4">
+          <h2>アクロスウィング</h2>
+          <p>利用率: <%= @acros == -1 ? "利用状況不明" : "#{@acros}%" %></p>
+          <% if @acros != -1 %>
+          <div id="Acros_MMR"></div>
+          <% else %>
+          <%= image_tag '/assets/outdated.png' %>
+          <% end %>
+          <p><a class="btn" href="#">詳細情報 &raquo;</a></p>
+        </div>
+        <div class="span4">
+          <h2>プリズムハウス</h2>
+          <p>利用率: <%= @prism == -1 ? "利用状況不明" : "#{@prism}%" %></p>
+          <% if @prism != -1 %>
+          <div id="Prism_MMR"></div>
+          <% else %>
+          <%= image_tag '/assets/outdated.png' %>
+          <% end %>
+          <p><a class="btn" href="#">詳細情報 &raquo;</a></p>
+        </div>
+        <div class="span4">
+          <h2>メディアセンター</h2>
+          <p>利用率: <%= @media == -1 ? "利用状況不明" : "#{@media}%" %></p>
+          <% if @media != -1 %>
+          <div id="Media_MMR"></div>
+          <% else %>
+          <%= image_tag '/assets/outdated.png' %>
+          <% end %>
+          <p><a class="btn" href="#">詳細情報 &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Company 2012</p>
+      </footer>
+    </div> <!-- /container -->
+
+    <!-- Javascripts
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <%= javascript_include_tag "application" %>
+    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+    <script type='text/javascript'>
+      google.load('visualization', '1', {packages:['gauge']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data_acros = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['利用率', 70],
+        ]);
+        var data_prism = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['利用率', 90],
+        ]);
+        var data_media = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['利用率', 100],
+        ]);
+
+        var options = {
+          width: 400, height: 200,
+          redFrom: 90, redTo: 100,
+          yellowFrom:75, yellowTo: 90,
+          greenFrom: 60, greenTo: 75,
+          minorTicks: 5
+        };
+
+        if (document.getElementById('Acros_MMR') != null) {
+          var chart_acros = new google.visualization.Gauge(document.getElementById('Acros_MMR'));
+          chart_acros.draw(data_acros, options);
+        }
+
+        if (document.getElementById('Prism_MMR') != null) {
+          var chart_prism = new google.visualization.Gauge(document.getElementById('Prism_MMR'));
+          chart_prism.draw(data_prism, options);
+        }
+
+        if (document.getElementById('Media_MMR') != null) {
+          var chart_media = new google.visualization.Gauge(document.getElementById('Media_MMR'));
+          chart_media.draw(data_media, options);
+        }
+      }
+    </script>
+  </body>
+</html>

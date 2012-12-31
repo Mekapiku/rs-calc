@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  room: 1
+  rate: 1.5
+  available: 1
+  unavailable: 1
+  windows: 1
+  linux: 1
+
+two:
+  room: 1
+  rate: 1.5
+  available: 1
+  unavailable: 1
+  windows: 1
+  linux: 1
